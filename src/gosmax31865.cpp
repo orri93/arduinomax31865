@@ -21,15 +21,33 @@ static PWFusion_MAX31865_RTD* pwf_max_rtd;
 struct var_max31865 max_rtd_values;
 #endif
 
+#define GOS_MAX_31865_ERRT_RTD_HITH  "RTD HiTh"
+#define GOS_MAX_31865_ERRT_RTD_LOTH  "RTD LoTh"
+#define GOS_MAX_31865_ERRT_RTD_REF   "REF High"
+#define GOS_MAX_31865_ERRT_RTD_FORCE "FORCE"
+#define GOS_MAX_31865_ERRT_RTD_VOLT  "Voltage"
+#define GOS_MAX_31865_ERRT_RTD_UNKN  "Unknown"
+
 static const char max31865errortext[MAX_31865_ERROR_COUNT][MAX_31865_ERROR_LENGTH] = {
-  "RTD HiTh",
-  "RTD LoTh" ,
-  "REF High",
-  "FORCE",
-  "FORCE",
-  "Voltage",
-  "Unknown"
+  GOS_MAX_31865_ERRT_RTD_HITH,
+  GOS_MAX_31865_ERRT_RTD_LOTH,
+  GOS_MAX_31865_ERRT_RTD_REF,
+  GOS_MAX_31865_ERRT_RTD_FORCE,
+  GOS_MAX_31865_ERRT_RTD_FORCE,
+  GOS_MAX_31865_ERRT_RTD_VOLT,
+  GOS_MAX_31865_ERRT_RTD_UNKN
 };
+
+static const uint8_t max31865errorlength[MAX_31865_ERROR_COUNT][MAX_31865_ERROR_LENGTH] = {
+  sizeof(GOS_MAX_31865_ERRT_RTD_HITH),
+  sizeof(GOS_MAX_31865_ERRT_RTD_LOTH),
+  sizeof(GOS_MAX_31865_ERRT_RTD_REF),
+  sizeof(GOS_MAX_31865_ERRT_RTD_FORCE),
+  sizeof(GOS_MAX_31865_ERRT_RTD_FORCE),
+  sizeof(GOS_MAX_31865_ERRT_RTD_VOLT),
+  sizeof(GOS_MAX_31865_ERRT_RTD_UNKN)
+};
+
 static const uint8_t max31865errormasks[MAX_31865_ERROR_COUNT] =
 {
     0x80,
@@ -80,12 +98,13 @@ double read(uint8_t& status, uint8_t& fault) {
 }
 #endif
 
-const char* error(const uint8_t& status, const uint8_t& fault) {
-  if ((Error = ::gos::sensor::error(status)) != nullptr) {
+const char* error(const uint8_t& status, const uint8_t& fault, uint8_t& length) {
+  if ((Error = ::gos::sensor::error(status, length)) != nullptr) {
     return Error;
   } else {
     for (i = 0; i < MAX_31865_ERROR_COUNT; i++) {
       if (max31865errormasks[i] & fault) {
+        length = max31865errorlength[i];
         return max31865errortext[i];
       }
     }

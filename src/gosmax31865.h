@@ -22,7 +22,7 @@ void setup(
   const uint8_t& spidatamode = SPI_MODE3);    /* MAX31865 works in MODE1 or MODE3 */
 double read(uint8_t& status, uint8_t& fault);
 #endif
-const char* error(const uint8_t& status, const uint8_t& fault);
+const char* error(const uint8_t& status, const uint8_t& fault, uint8_t& length);
 }
 }
 
