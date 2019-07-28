@@ -63,12 +63,12 @@ static const char* Error;
 static uint8_t i;
 
 #ifndef GOS_ARDUINO_UNIT_TESTING
-bool setup(
-  const uint8_t& pincs,
-  const uint8_t& rtdtype,
-  const uint8_t& wires,
-  const int& spispeed,
-  const uint8_t& spidatamode) {
+void setup(
+  const uint8_t& pincs,                        /* PIN for Chip Select CS is often 10 */
+  const uint8_t& rtdtype,                     /* RTD type either PT100 or PT1000 */
+  const uint8_t& wires,                       /* Often 3 wires rather than 4 */
+  const int& spispeed,                        /* SPI_CLOCK_DIV16 (1MHz) */
+  const uint8_t& spidatamode) {               /* MAX31865 works in MODE1 or MODE3 */
   // setup for the the SPI library:
   SPI.begin();                            // begin SPI
   SPI.setClockDivider(spispeed);   // SPI speed to SPI_CLOCK_DIV16 (1MHz)
