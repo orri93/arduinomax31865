@@ -5,6 +5,7 @@
 #include <PlayingWithFusion_MAX31865_STRUCT.h>       // struct library
 #endif
 
+#define GOS_SENSOR_GLOBAL
 #include <arduinosensor.h>
 
 #include "gosmax31865.h"
