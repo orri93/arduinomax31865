@@ -38,7 +38,7 @@ static const char max31865errortext[MAX_31865_ERROR_COUNT][MAX_31865_ERROR_LENGT
   GOS_MAX_31865_ERRT_RTD_UNKN
 };
 
-static const uint8_t max31865errorlength[MAX_31865_ERROR_COUNT][MAX_31865_ERROR_LENGTH] = {
+static const uint8_t max31865errorlength[MAX_31865_ERROR_COUNT] = {
   sizeof(GOS_MAX_31865_ERRT_RTD_HITH),
   sizeof(GOS_MAX_31865_ERRT_RTD_LOTH),
   sizeof(GOS_MAX_31865_ERRT_RTD_REF),
