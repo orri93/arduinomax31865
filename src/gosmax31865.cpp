@@ -93,7 +93,7 @@ double read(uint8_t& status, uint8_t& fault) {
     status = gos::sensor::range::check(reading);
     return gos::sensor::value;
   } else {
-    status = SENSOR_STATUS_ERROR;
+    status = GOS_SENSOR_STATUS_ERROR;
     fault = max_rtd_values.status;
   }
 }
