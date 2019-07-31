@@ -90,7 +90,7 @@ double read(uint8_t& status, uint8_t& fault) {
   pwf_max_rtd->MAX31865_full_read(&max_rtd_values);
   if (max_rtd_values.status == 0) {
     gos::sensor::value = (((double)max_rtd_values.rtd_res_raw) / 32.0) - 256.0;
-    status = gos::sensor::range::check(reading);
+    status = gos::sensor::range::check(gos::sensor::value);
     return gos::sensor::value;
   } else {
     status = GOS_SENSOR_STATUS_ERROR;
