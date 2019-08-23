@@ -22,18 +22,24 @@ namespace gos {
 class Max31865 {
 public:
   Max31865(
-    const uint8_t&  pincs = 10,                       /* PIN for Chip Select CS is often 10 */
-    const uint32_t& clock = SPI_CLOCK_MAX_31865,      /* SPI CLOCK 1000000 (1MHz) */
-    const uint8_t&  order = SPI_BIT_ORDER_MAX_31865,  /* SPI bit order MSB FIRST */
-    const uint8_t&  mode = SPI_MODE_MAX_31865);       /* MAX31865 works in MODE1 or MODE3 */
+    /* PIN for Chip Select CS is often 10 */
+    const uint8_t&  pincs = 10,
+    /* SPI CLOCK 1000000 (1MHz) */
+    const uint32_t& clock = SPI_CLOCK_MAX_31865,
+    /* SPI bit order MSB FIRST */
+    const uint8_t&  order = SPI_BIT_ORDER_MAX_31865,
+    /* MAX31865 works in MODE1 or MODE3 */
+    const uint8_t&  mode = SPI_MODE_MAX_31865);
   void initialize(
-    const uint8_t& rtdtype = RTD_TYPE_PT100,          /* RTD type either PT100 or PT1000 */
-    const uint8_t& wires = RTD_3_WIRE);               /* Often 3 wires rather than 4 */
+    /* RTD type either PT100 or PT1000 */
+    const uint8_t& rtdtype = RTD_TYPE_PT100,
+    /* Often 3 wires rather than 4 */
+    const uint8_t& wires = RTD_3_WIRE);
   bool read(double& value);
+  /* RTD status - full status code */
+  uint8_t Status;
 #ifndef SPI_NO_ERROR_HANDLING_MAX_31865
   const char* error(uint8_t& length);
-#else
-  const uint8_t& status();
 #endif
 private:
   uint8_t pincs_;
@@ -42,12 +48,11 @@ private:
   uint8_t rtdtype_;       // RTD type. 1 = PT100; 2 = PT1000
   uint8_t wires_;         // # of wires. 2/4-wire: 0x00, 3-wire: 0x10
 
-  uint8_t  conf_reg_;			// Configuration register readout
+  uint8_t  conf_reg_;     // Configuration register readout
   uint16_t rtd_res_raw_;  // RTD IC raw resistance register
   uint16_t rtd_res_;      // RTD IC resistance
-  int16_t  hft_val_;			// High fault threshold register readout
-  int16_t  lft_val_;			// Low fault threshold register readout
-  uint8_t  status_;			  // RTD status - full status code
+  int16_t  hft_val_;      // High fault threshold register readout
+  int16_t  lft_val_;      // Low fault threshold register readout
 
   void configure();
 };

@@ -53,7 +53,7 @@ Max31865::Max31865(
   const uint32_t& clock,    /* SPI CLOCK 1000000 (1MHz) */
   const uint8_t&  order,    /* SPI bit order MSB FIRST */
   const uint8_t&  mode) :   /* MAX6677 works in MODE1 (or MODE3?) */
-  pincs_(pincs), spisettings_(clock, order, mode) {
+  Status(0), pincs_(pincs), spisettings_(clock, order, mode) {
 }
 
 void Max31865::initialize(
@@ -92,14 +92,14 @@ bool Max31865::read(double& value) {
   digitalWrite(pincs_, LOW);
 
   // Write command telling IC that we want to 'read' and start at register 0
-  SPI.transfer(0x00);				// plan to start read at the config register
+  SPI.transfer(0x00);         // plan to start read at the config register
 
   //
   // read registers in order
   //
 
   // configuration
-  conf_reg_ = SPI.transfer(0x00);	        // read 1st 8 bits
+  conf_reg_ = SPI.transfer(0x00);         // read 1st 8 bits
 
 #ifndef SPI_NOT_USE_16_MAX_31865
   rtd_res_raw_ = SPI.transfer16(0x0000);  // RTD MSBs and LSBs
@@ -128,9 +128,9 @@ bool Max31865::read(double& value) {
 #endif
   lft_val_ >>= 1;                         // store data after 1-bit right shift
 
-  status_ = SPI.transfer(0x00);		        // Fault Status read 8th 8 bits
+  Status = SPI.transfer(0x00);            // Fault Status read 8th 8 bits
 
-  if (rtd_res_raw_ && status_ == MAX_31865_OK) {
+  if (rtd_res_raw_ && Status == MAX_31865_OK) {
     // Calculate deg C
     value = (((double)rtd_res_) / 32.0) - 256.0;
   } else {
@@ -142,14 +142,14 @@ bool Max31865::read(double& value) {
 
   SPI.endTransaction();
 
-  return rtd_res_raw_ && status_ == MAX_31865_OK;
+  return rtd_res_raw_ && Status == MAX_31865_OK;
 }
 
 #ifndef SPI_NO_ERROR_HANDLING_MAX_31865
 const char* Max31865::error(uint8_t& length) {
-  if (status_ != MAX_31865_OK) {
+  if (Status != MAX_31865_OK) {
     for (uint8_t i = 0; i < MAX_31865_ERROR_COUNT; i++) {
-      if (::gos::max31865::error::mask[i] & status_) {
+      if (::gos::max31865::error::mask[i] & Status) {
         length = ::gos::max31865::error::length[i];
         return ::gos::max31865::error::text[i];
       }
@@ -157,10 +157,6 @@ const char* Max31865::error(uint8_t& length) {
   }
   length = 0;
   return nullptr;
-}
-#else
-const uint8_t& Max31865::status() {
-  return status_;
 }
 #endif
 
